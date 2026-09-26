@@ -1,17 +1,13 @@
 const r = require("raylib");
 
 const WINDOW_WIDTH = 800;
-const WINDOW_HEIGHT = 400;
+const WINDOW_HEIGHT = 600;
 const FPS = 7;
 
 let detectorX = 0;
 const detectorY = 0;
 const detectorWidth = 20;
 let revDirection = WINDOW_WIDTH - detectorWidth;
-
-const particalX = WINDOW_WIDTH / 4;
-const particalY = 0;
-const particalWidth = 50;
 
 function running() {
     return !r.WindowShouldClose();
@@ -37,6 +33,11 @@ function update() {
 
 
 function rectangle() {
+
+    const particalX = WINDOW_WIDTH * 0.4;
+    const particalY = 0;
+    const particalWidth = 50;
+
     r.DrawRectangle(particalX, particalY, particalWidth, WINDOW_HEIGHT, r.BLUE,);
     r.DrawRectangle(detectorX, detectorY, detectorWidth, WINDOW_HEIGHT, r.WHITE,);
 }
