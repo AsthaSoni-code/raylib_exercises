@@ -8,7 +8,11 @@ let firstDetectorX = 0;
 const firstDetectorY = 0;
 const firstDetectorWidth = 20;
 
-let revDirection = WINDOW_WIDTH - firstDetectorWidth;
+let secondDetectorX = WINDOW_WIDTH / 2;
+const secondDetectorY = firstDetectorY;
+const secondDetectorWidth = firstDetectorWidth;
+
+let revDirection = WINDOW_WIDTH / 2 - firstDetectorWidth;
 
 const firstParticleX = WINDOW_WIDTH * 0.4;
 const firstParticleY = 0;
@@ -32,7 +36,7 @@ function update() {
     let X = firstDetectorWidth / 8;
 
     if (firstDetectorX < revDirection) {
-        revDirection = WINDOW_WIDTH - firstDetectorWidth;
+        revDirection = WINDOW_WIDTH / 2 - firstDetectorWidth;
         firstDetectorX = firstDetectorX + X;
     } else {
         revDirection = 1;
@@ -40,22 +44,26 @@ function update() {
     }
 }
 
-function chooseDetecColour(X, W) {
+function chooseDetecColour(dX, dW, pX, pW) {
 
-    const beforeOverlapRange = (firstDetectorX >= X - firstDetectorWidth);
-    const afterOverlapRange = (firstDetectorX <= X + W);
+    const beforeOverlapRange = (dX >= pX - dW);
+    const afterOverlapRange = (dX <= pX + pW);
 
     return (beforeOverlapRange && afterOverlapRange) ? r.RED : r.WHITE;
 }
 
-function chooseOverlapRange() {
-    return (firstDetectorX < (firstParticleX + firstParticleWidth)) ? chooseDetecColour(firstParticleX, firstParticleWidth) : chooseDetecColour(secondParticleX, secondParticleWidth);
-}
+// function chooseOverlapRange() {
+//     return (WINDOW_WIDTH < ) ? chooseDetecColour(firstParticleX, firstParticleWidth) : chooseDetecColour(secondParticleX, secondParticleWidth);
+
+
+//     // firstDetectorX < (firstParticleX + firstParticleWidth)
+// }
 
 function rectangle() {
-    r.DrawRectangle(firstParticleX, firstParticleY, firstParticleWidth, WINDOW_HEIGHT, r.SKYBLUE,);
-    r.DrawRectangle(secondParticleX, secondParticleY, secondParticleWidth, WINDOW_HEIGHT, r.SKYBLUE,);
-    r.DrawRectangle(firstDetectorX, firstDetectorY, firstDetectorWidth, WINDOW_HEIGHT, chooseOverlapRange(),);
+    r.DrawRectangle(firstParticleX, firstParticleY, firstParticleWidth, WINDOW_HEIGHT, r.SKYBLUE);
+    r.DrawRectangle(secondParticleX, secondParticleY, secondParticleWidth, WINDOW_HEIGHT, r.SKYBLUE);
+    r.DrawRectangle(firstDetectorX, firstDetectorY, firstDetectorWidth, WINDOW_HEIGHT, chooseDetecColour(firstDetectorX, firstDetectorWidth, firstParticleX, firstParticleWidth));
+    r.DrawRectangle(secondDetectorX, secondDetectorY, secondDetectorWidth, WINDOW_HEIGHT, chooseDetecColour(secondDetectorX, secondDetectorWidth, secondParticleX, secondParticleWidth));
 }
 
 function draw() {
