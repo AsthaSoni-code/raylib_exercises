@@ -9,6 +9,10 @@ const detectorY = 0;
 const detectorWidth = 20;
 let revDirection = WINDOW_WIDTH - detectorWidth;
 
+const particalX = WINDOW_WIDTH / 4;
+const particalY = 0;
+const particalWidth = 50;
+
 function running() {
     return !r.WindowShouldClose();
 }
@@ -33,6 +37,7 @@ function update() {
 
 
 function rectangle() {
+    r.DrawRectangle(particalX, particalY, particalWidth, WINDOW_HEIGHT, r.BLUE,);
     r.DrawRectangle(detectorX, detectorY, detectorWidth, WINDOW_HEIGHT, r.WHITE,);
 }
 
