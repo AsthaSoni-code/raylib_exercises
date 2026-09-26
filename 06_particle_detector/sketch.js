@@ -2,12 +2,16 @@ const r = require("raylib");
 
 const WINDOW_WIDTH = 800;
 const WINDOW_HEIGHT = 600;
-const FPS = 7;
+const FPS = 60;
 
 let detectorX = 0;
 const detectorY = 0;
 const detectorWidth = 20;
 let revDirection = WINDOW_WIDTH - detectorWidth;
+
+const particleX = WINDOW_WIDTH * 0.4;
+const particleY = 0;
+const particleWidth = 50;
 
 function running() {
     return !r.WindowShouldClose();
@@ -20,7 +24,7 @@ function setup() {
 
 function update() {
 
-    let X = detectorWidth / 2;
+    let X = detectorWidth / 8;
 
     if (detectorX < revDirection) {
         revDirection = WINDOW_WIDTH - detectorWidth;
@@ -31,17 +35,18 @@ function update() {
     }
 }
 
+function choseDetecColour() {
 
-function rectangle() {
+    const beforeOverlapRange = detectorX >= particleX - detectorWidth
+    const afterOverlapRange = detectorX <= particleX + particleWidth
 
-    const particalX = WINDOW_WIDTH * 0.4;
-    const particalY = 0;
-    const particalWidth = 50;
-
-    r.DrawRectangle(particalX, particalY, particalWidth, WINDOW_HEIGHT, r.BLUE,);
-    r.DrawRectangle(detectorX, detectorY, detectorWidth, WINDOW_HEIGHT, r.WHITE,);
+    return (beforeOverlapRange && afterOverlapRange) ? r.RED : r.WHITE;
 }
 
+function rectangle() {
+    r.DrawRectangle(particleX, particleY, particleWidth, WINDOW_HEIGHT, r.BLUE,);
+    r.DrawRectangle(detectorX, detectorY, detectorWidth, WINDOW_HEIGHT, choseDetecColour(),);
+}
 
 function draw() {
     r.BeginDrawing();
