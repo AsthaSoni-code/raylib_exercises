@@ -5,19 +5,24 @@ const WINDOW_WIDTH = 1000;
 const WINDOW_HEIGHT = 600;
 const FPS = 60;
 
-let firstDetectorX = 0;
-const firstDetectorY = 0;
-const firstDetectorWidth = 20;
+let detector1X = 0;
+const detector1Y = 0;
+const detector1Width = 20;
 
-let revDirection = WINDOW_WIDTH - firstDetectorWidth;
+let detector2X = WINDOW_WIDTH / 2;
+const detector2Y = 0;
+const detector2Width = 20;
 
-const firstParticleX = WINDOW_WIDTH * 0.4;
-const firstParticleY = 0;
-const firstParticleWidth = 50;
+let revDirectionD1 = WINDOW_WIDTH / 2 - detector1Width;
+let revDirectionD2 = WINDOW_WIDTH - detector2Width;
 
-const secondParticleX = WINDOW_WIDTH * 0.8;
-const secondParticleY = 0;
-const secondParticleWidth = 10;
+const particle1X = WINDOW_WIDTH * 0.4;
+const particle1Y = 0;
+const particle1Width = 50;
+
+const particle2X = WINDOW_WIDTH * 0.6;
+const particle2Y = 0;
+const particle2Width = 10;
 
 function running() {
     return !r.WindowShouldClose();
@@ -28,27 +33,46 @@ function setup() {
     r.SetTargetFPS(FPS);
 }
 
-function update() {
-    let X = firstDetectorWidth / 8;
+function moveDetector1() {
+    let speed = detector1Width / 7;
 
-    if (firstDetectorX < revDirection) {
-        revDirection = WINDOW_WIDTH - firstDetectorWidth;
+    if (detector1X < revDirectionD1) {
+        revDirectionD1 = WINDOW_WIDTH / 2 - detector1Width;
 
-        firstDetectorX = firstDetectorX + X;
+        detector1X = detector1X + speed;
     } else {
-        revDirection = 1;
-        firstDetectorX = firstDetectorX - X;
+        revDirectionD1 = 1;
+        detector1X = detector1X - speed;
     }
 }
 
-function chooseDetecColour() {
-    return (g.chooseOverlapRange(firstDetectorX, firstDetectorWidth, firstParticleX, firstParticleWidth) || g.chooseOverlapRange(firstDetectorX, firstDetectorWidth, secondParticleX, secondParticleWidth)) ? r.RED : r.WHITE;
+function moveDtector2() {
+    let speed = detector2Width / 9;
+
+    if (detector2X < revDirectionD2) {
+        revDirectionD2 = WINDOW_WIDTH - detector2Width;
+
+        detector2X = detector2X + speed;
+    } else {
+        revDirectionD2 = WINDOW_WIDTH - WINDOW_WIDTH / 2;
+        detector2X = detector2X - speed;
+    }
+}
+
+function update() {
+    moveDetector1();
+    moveDtector2();
+}
+
+function choose1DetecColour(a, b) {
+    return (g.chooseOverlapRange(a, b, particle1X, particle1Width) || g.chooseOverlapRange(a, b, particle2X, particle2Width)) ? r.RED : r.WHITE;
 }
 
 function rectangle() {
-    r.DrawRectangle(firstParticleX, firstParticleY, firstParticleWidth, WINDOW_HEIGHT, r.SKYBLUE);
-    r.DrawRectangle(secondParticleX, secondParticleY, secondParticleWidth, WINDOW_HEIGHT, r.SKYBLUE);
-    r.DrawRectangle(firstDetectorX, firstDetectorY, firstDetectorWidth, WINDOW_HEIGHT, chooseDetecColour());
+    r.DrawRectangle(particle1X, particle1Y, particle1Width, WINDOW_HEIGHT, r.SKYBLUE);
+    r.DrawRectangle(particle2X, particle2Y, particle2Width, WINDOW_HEIGHT, r.SKYBLUE);
+    r.DrawRectangle(detector1X, detector1Y, detector1Width, WINDOW_HEIGHT, choose1DetecColour(detector1X, detector1Width));
+    r.DrawRectangle(detector2X, detector2Y, detector2Width, WINDOW_HEIGHT, choose1DetecColour(detector2X, detector2Width));
 }
 
 
