@@ -1,121 +1,118 @@
 const r = require("raylib");
 const g = require("./geometry");
+const s = require("./screen.js");
 
-const WINDOW_WIDTH = 1000;
-const WINDOW_HEIGHT = 600;
-const FPS = 60;
+const d1 = require("./detector1.js");
+const d2 = require("./detector2.js");
+const d3 = require("./detector3.js");
 
-let detector1X = 0;
-const detector1Y = 0;
-const detector1Width = 20;
-
-let detector2X = WINDOW_WIDTH / 2;
-const detector2Y = 0;
-const detector2Width = 20;
-
-let detector3X = 0;
-let detector3Y = 0;
-let detector3Height = 20;
-
-let revDirectionD1 = WINDOW_WIDTH / 2 - detector1Width;
-let revDirectionD2 = WINDOW_WIDTH - detector2Width;
-let revDirectionD3 = WINDOW_HEIGHT - detector3Height;
-
-const particle1X = WINDOW_WIDTH * 0.4;
-const particle1Y = 0;
-const particle1Width = 50;
-
-const particle2X = WINDOW_WIDTH * 0.8;
-const particle2Y = 0;
-const particle2Width = 10;
-
-const particle3X = 0;
-let particle3Y = WINDOW_HEIGHT * 0.3;
-const particle3Height = 15;
+const p1 = require("./particle1.js");
+const p2 = require("./particle2.js");
+const p3 = require("./particle3.js");
 
 function running() {
-    return !r.WindowShouldClose();
+  return !r.WindowShouldClose();
 }
 
 function setup() {
-    r.InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Raylib");
-    r.SetTargetFPS(FPS);
-}
-
-function moveDetector1() {
-    let speed = detector1Width / 7;
-
-    if (detector1X < revDirectionD1) {
-        revDirectionD1 = WINDOW_WIDTH / 2 - detector1Width;
-
-        detector1X = detector1X + speed;
-    } else {
-        revDirectionD1 = 1;
-        detector1X = detector1X - speed;
-    }
-}
-
-function moveDtector2() {
-    let speed = detector2Width / 9;
-
-    if (detector2X < revDirectionD2) {
-        revDirectionD2 = WINDOW_WIDTH - detector2Width;
-
-        detector2X = detector2X + speed;
-    } else {
-        revDirectionD2 = WINDOW_WIDTH - WINDOW_WIDTH / 2;
-        detector2X = detector2X - speed;
-    }
-}
-
-function moveDtector3() {
-    let speed = detector3Height / 9;
-
-    if (detector3Y < revDirectionD3) {
-        revDirectionD3 = WINDOW_HEIGHT - detector3Height;
-        detector3Y = detector3Y + speed;
-    } else {
-        revDirectionD3 = WINDOW_HEIGHT - WINDOW_HEIGHT;
-        detector3Y = detector3Y - speed;
-    }
+  r.SetTraceLogLevel(r.LOG_NONE);
+  r.InitWindow(s.WIDTH, s.HEIGHT, s.TITLE);
+  r.SetTargetFPS(s.FPS);
 }
 
 function update() {
-    moveDetector1();
-    moveDtector2();
-    moveDtector3();
+  d1.x = d1.velocity + d1.x;
+  d2.x = d2.velocity + d2.x;
+  d3.y = d3.velocity + d3.y;
+
+  d1.velocity = g.changeDirection(d1.x, s.WIDTH / 2, d1.width, 0, d2.velocity);
+  d2.velocity = g.changeDirection(
+    d2.x,
+    s.WIDTH,
+    d2.width,
+    s.WIDTH / 2,
+    d2.velocity,
+  );
+  d3.velocity = g.changeDirection(d3.y, s.HEIGHT, d3.height, 0, d3.velocity);
 }
 
-function chooseDetecColour(a, b) {
-    return (g.chooseOverlapRange(a, b, particle1X, particle1Width) || g.chooseOverlapRange(a, b, particle2X, particle2Width)) ? r.RED : r.WHITE;
-}
-function chooseDetec3Colour(a, b) {
-    return g.chooseOverlapRange(a, b, particle3Y, particle3Height) ? r.RED : r.WHITE;
+function chooseDetectorColour(isDetected) {
+  return isDetected ? r.RED : r.WHITE;
 }
 
-function rectangle() {
-    r.DrawRectangle(particle1X, particle1Y, particle1Width, WINDOW_HEIGHT, r.SKYBLUE);
-    r.DrawRectangle(particle2X, particle2Y, particle2Width, WINDOW_HEIGHT, r.SKYBLUE);
-    r.DrawRectangle(particle3X, particle3Y, WINDOW_WIDTH, particle3Height, r.SKYBLUE);
-    r.DrawRectangle(detector1X, detector1Y, detector1Width, WINDOW_HEIGHT, chooseDetecColour(detector1X, detector1Width));
-    r.DrawRectangle(detector2X, detector2Y, detector2Width, WINDOW_HEIGHT, chooseDetecColour(detector2X, detector2Width));
-    r.DrawRectangle(detector3X, detector3Y, WINDOW_WIDTH, detector3Height, chooseDetec3Colour(detector3Y, detector3Height));
+function drawDetector(X, Y, width, height, colour) {
+  r.DrawRectangle(X, Y, width, height, colour);
+}
+
+function drawParticleField(X, Y, width, height, colour) {
+  r.DrawRectangle(X, Y, width, height, colour);
+}
+
+function drawRanges() {
+  drawParticleField(p1.x, 0, p1.width, s.HEIGHT, r.SKYBLUE);
+  drawParticleField(p2.x, 0, p2.width, s.HEIGHT, r.SKYBLUE);
+  drawParticleField(0, p3.y, s.WIDTH, p3.height, r.SKYBLUE);
+
+  const scanner1Overlap = g.isOverlapingRange(
+    d1.x,
+    d1.width,
+    p1.x,
+    p1.width,
+    p2.x,
+    p2.width,
+  );
+  const scanner2Overlap = g.isOverlapingRange(
+    d2.x,
+    d2.width,
+    p1.x,
+    p1.width,
+    p2.x,
+    p2.width,
+  );
+  const scanner3Overlap = g.detectParticleField(
+    d3.y,
+    d3.height,
+    p3.y,
+    p3.height,
+  );
+
+  drawDetector(
+    d1.x,
+    d1.y,
+    d1.width,
+    s.HEIGHT,
+    chooseDetectorColour(scanner1Overlap),
+  );
+  drawDetector(
+    d2.x,
+    d2.y,
+    d2.width,
+    s.HEIGHT,
+    chooseDetectorColour(scanner2Overlap),
+  );
+  drawDetector(
+    d3.x,
+    d3.y,
+    s.WIDTH,
+    d3.height,
+    chooseDetectorColour(scanner3Overlap),
+  );
 }
 
 function draw() {
-    r.BeginDrawing();
-    r.ClearBackground(r.BLACK);
-    rectangle();
-    r.EndDrawing();
+  r.BeginDrawing();
+  r.ClearBackground(r.BLACK);
+  drawRanges();
+  r.EndDrawing();
 }
 function teardown() {
-    r.CloseWindow();
+  r.CloseWindow();
 }
 
 module.exports = {
-    running,
-    setup,
-    update,
-    draw,
-    teardown,
+  running,
+  setup,
+  update,
+  draw,
+  teardown,
 };
