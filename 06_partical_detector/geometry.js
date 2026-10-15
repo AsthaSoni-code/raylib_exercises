@@ -5,24 +5,19 @@ function detectParticleField(dX, dW, pX, pW) {
   return beforeOverlapRange && afterOverlapRange;
 }
 
-function isOverlapingRange(
-  start,
-  dWidth,
-  particle1X,
-  particle1Width,
-  particle2X,
-  particle2Width,
-) {
+function isOverlapingRange(d, p1, p2) {
   return (
-    detectParticleField(start, dWidth, particle1X, particle1Width) ||
-    detectParticleField(start, dWidth, particle2X, particle2Width)
+    detectParticleField(d.x, d.width, p1.x, p1.width) ||
+    detectParticleField(d.x, d.width, p2.x, p2.width)
   );
 }
 
-function changeDirection(start, a, b, initialPoint, speed) {
-  const end = a - b;
+function isReachedEdge(movingAxis, end, start) {
+  return movingAxis >= end || movingAxis === start;
+}
 
-  return start >= end || start === initialPoint ? -speed : speed;
+function changeDirection(d, movingAxis) {
+  return isReachedEdge(movingAxis, d.end, d.start) ? -d.velocity : d.velocity;
 }
 
 module.exports = {

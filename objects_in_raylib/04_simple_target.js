@@ -1,0 +1,62 @@
+const r = require("raylib");
+
+const windowWidth = 800;
+const windowHeight = 400;
+const FPS = 60;
+
+function setup() {
+  r.InitWindow(windowWidth, windowHeight, "Raylib");
+  r.SetTargetFPS(FPS);
+}
+
+const center = {
+  x: 370,
+  y: 200,
+};
+
+const largeCircleColour = {
+  r: 189,
+  g: 20,
+  b: 50,
+  a: 50,
+};
+
+const mediumCircleColour = {
+  r: 20,
+  g: 10,
+  b: 139,
+  a: 100,
+};
+
+const smallCircleColour = {
+  r: 90,
+  g: 100,
+  b: 200,
+  a: 250,
+};
+
+function drawCircle() {
+  r.DrawCircle(center.x, center.y, 125, largeCircleColour);
+  r.DrawCircle(center.x, center.y, 80, mediumCircleColour);
+  r.DrawCircle(center.x, center.y, 50, smallCircleColour);
+}
+
+function draw() {
+  r.BeginDrawing();
+  r.ClearBackground(r.WHITE);
+  drawCircle();
+  r.EndDrawing();
+}
+
+function loop() {
+  while (!r.WindowShouldClose()) {
+    draw();
+  }
+}
+
+function main() {
+  setup();
+  loop();
+}
+
+main();
