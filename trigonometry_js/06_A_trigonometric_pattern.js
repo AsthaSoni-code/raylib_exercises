@@ -9,12 +9,15 @@ function setup() {
 
   r.InitWindow(screen.width, screen.height, "trig pattern");
   r.SetTargetFPS(screen.fps);
+  let cf = 0;
 
-  return screen;
+  return {
+    screen,
+    cf,
+  };
 }
 
-let cf = 0;
-function pattern(screen) {
+function pattern(screen, cf) {
   const startX = screen.width / 2;
   const startY = screen.height / 2;
 
@@ -37,11 +40,11 @@ function pattern(screen) {
   }
 }
 
-function draw(screen) {
+function draw(screen, cf) {
   r.BeginDrawing();
   r.ClearBackground(r.BLACK);
 
-  pattern(screen);
+  pattern(screen, cf);
 
   r.EndDrawing();
 }
@@ -50,9 +53,9 @@ function teardown() {
   r.CloseWindow();
 }
 
-function loop(screen) {
+function loop(screen, cf) {
   while (!r.WindowShouldClose()) {
-    draw(screen);
+    draw(screen, cf);
     cf += 0.005;
   }
 }
@@ -60,7 +63,7 @@ function loop(screen) {
 function main() {
   const world = setup();
 
-  loop(world);
+  loop(world.screen, world.cf);
   teardown();
 }
 

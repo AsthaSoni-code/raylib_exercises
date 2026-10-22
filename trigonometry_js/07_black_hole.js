@@ -28,7 +28,7 @@ function pattern(screen, cf) {
 
     const angle = Math.cos(i) * step;
 
-    const radius = ((cf * 100) % 200) + 2 / Math.tan(angle); //Black Hole
+    const radius = ((cf * 100) % 200) + 2 / Math.tan(angle);
 
     const x = startX + radius * Math.sin(angle + i + cf);
     const y = startY + radius * Math.cos(angle + i + cf);
