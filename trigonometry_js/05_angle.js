@@ -29,11 +29,13 @@ function setup() {
 function distance(x1, y1, x2, y2) {
   const x = x1 - x2;
   const y = y1 - y2;
+
   return Math.sqrt(x ** 2 + y ** 2);
 }
 
 function angleA(base, perpendicular) {
   const thita = Math.atan(base / perpendicular);
+
   return Math.round(thita);
 }
 
@@ -95,6 +97,7 @@ function loop(length, pointA, pointB) {
 
 function main() {
   const world = setup();
+
   loop(world.length, world.pointA, world.pointB);
   teardown();
 }
