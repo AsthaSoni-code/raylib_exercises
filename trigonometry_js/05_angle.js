@@ -1,6 +1,12 @@
 const r = require("raylib");
 
 function setup() {
+  const screen = {
+    width: 800,
+    height: 500,
+    fps: 60,
+  };
+
   const pointA = { x: 100, y: 300 };
   const pointB = { x: 350, y: 150 };
 
@@ -10,8 +16,8 @@ function setup() {
     BC: distance(350, 150, 350, 300),
   };
 
-  r.InitWindow(800, 500, "angle");
-  r.SetTargetFPS(60);
+  r.InitWindow(screen.width, screen.height, "angle");
+  r.SetTargetFPS(screen.fps);
 
   return {
     pointA,
