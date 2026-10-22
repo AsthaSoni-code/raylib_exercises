@@ -26,28 +26,44 @@ function distance(x1, y1, x2, y2) {
   return Math.sqrt(x ** 2 + y ** 2);
 }
 
-function angleA(base, hypotenuse) {
-  const thita = Math.acos(base / hypotenuse);
+function angleA(base, perpendicular) {
+  const thita = Math.atan(base / perpendicular);
   return Math.round(thita);
 }
 
-function convIntoDegree(base, hypotenuse) {
-  return (angleA(base, hypotenuse) * 180) / Math.PI;
+function angleAIntoDegree(base, perpendicular) {
+  return (angleA(base, perpendicular) * 180) / Math.PI;
 }
 
-function angleB(base, hypotenuse) {
-  return 180 - (90 + angleA(base, hypotenuse));
+function angleB(base, perpendicular) {
+  return 180 - (90 + angleAIntoDegree(base, perpendicular));
+}
+
+function text(length, pointA, pointB) {
+  r.DrawText("A", pointA.x, pointA.y + 10, 18, r.WHITE);
+  r.DrawText("B", pointB.x + 10, pointB.y, 18, r.WHITE);
+  r.DrawText("C", pointB.x + 10, pointA.y + 10, 18, r.WHITE);
+
+  r.DrawText(
+    `Angle A =  ${angleAIntoDegree(length.AC, length.BC)}  Degree`,
+    140,
+    350,
+    18,
+    r.WHITE,
+  );
+  r.DrawText(
+    `Angle B =  ${angleB(length.AC, length.BC)}  Degree`,
+    140,
+    400,
+    18,
+    r.WHITE,
+  );
 }
 
 function drawLines(pointA, pointB) {
   r.DrawLineEx(pointA, pointB, 3, r.RED);
-  r.DrawText("A", pointA.x, pointA.y + 10, 18, r.WHITE);
-
   r.DrawLineEx(pointA, { x: pointB.x, y: pointA.y }, 3, r.WHITE);
-  r.DrawText("B", pointB.x + 10, pointB.y, 18, r.WHITE);
-
   r.DrawLineEx(pointB, { x: pointB.x, y: pointA.y }, 3, r.WHITE);
-  r.DrawText("C", pointB.x + 10, pointA.y + 10, 18, r.WHITE);
 }
 
 function draw(length, pointA, pointB) {
@@ -56,20 +72,7 @@ function draw(length, pointA, pointB) {
 
   drawLines(pointA, pointB);
 
-  r.DrawText(
-    `Angle A =  ${convIntoDegree(length.AC, length.AB)}  Degree`,
-    140,
-    350,
-    18,
-    r.WHITE,
-  );
-  r.DrawText(
-    `Angle B =  ${angleB(length.AC, length.AB)}  Degree`,
-    140,
-    400,
-    18,
-    r.WHITE,
-  );
+  text(length, pointA, pointB);
 
   r.EndDrawing();
 }
